@@ -33,7 +33,15 @@ def load_raw_table(session, tname=None, s3dir=None, year=None, schema=None):
     # we can infer schema using the parquet read option
     df = session.read.option("compression", "snappy") \
                             .parquet(location)
-    df.copy_into_table("{}".format(tname))
+    # df.copy_into_table("{}".format(tname))
+    df.copy_into_table(
+        table_name=tname,
+        iceberg_config={
+            "external_volume": "my_ext_vol",
+            "catalog": "SNOWFLAKE",
+            "base_location": "iceberg-tables/table"
+        }
+    )
     comment_text = '''{"origin":"sf_sit-is","name":"snowpark_101_de","version":{"major":1, "minor":0},"attributes":{"is_quickstart":1, "source":"sql"}}'''
     sql_command = f"""COMMENT ON TABLE {tname} IS '{comment_text}';"""
     session.sql(sql_command).collect()
