@@ -26,7 +26,12 @@ jobs:
       - name: Install Python packages
         run: pip install -r requirements.txt
 
-      - name: Deploy Snowpark apps
+      - name: Install Snowflake CLI
+        uses: snowflakedb/snowflake-cli-action@v1
+        with:
+          cli-version: "latest"
+          
+      - name: Configure SnowCLI
         env:
           SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
           SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
@@ -34,4 +39,15 @@ jobs:
           SNOWFLAKE_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
           SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
           SNOWFLAKE_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE }}
+        run: |
+          cd $GITHUB_WORKSPACE
+          echo "[connections.dev]" > config
+          echo "accountname = $SNOWFLAKE_ACCOUNT" >> config
+          echo "username = $SNOWFLAKE_USER" >> config
+          echo "password = $SNOWFLAKE_PASSWORD" >> config
+          echo "rolename = $SNOWFLAKE_ROLE" >> config
+          echo "warehousename = $SNOWFLAKE_WAREHOUSE" >> config
+          echo "dbname = $SNOWFLAKE_DATABASE" >> config
+
+      - name: Deploy Snowpark apps
         run: python deploy_snowpark_apps.py $GITHUB_WORKSPACE
