@@ -28,8 +28,6 @@ jobs:
 
       - name: Install Snowflake CLI
         uses: snowflakedb/snowflake-cli-action@v2.0
-        with:
-          cli-version: "latest"
           
       - name: Configure SnowCLI
         env:
