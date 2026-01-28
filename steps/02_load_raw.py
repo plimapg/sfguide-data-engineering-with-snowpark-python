@@ -43,7 +43,8 @@ def load_raw_table(session, tname=None, s3dir=None, year=None, schema=None):
         }
     )
     comment_text = '''{"origin":"sf_sit-is","name":"snowpark_101_de","version":{"major":1, "minor":0},"attributes":{"is_quickstart":1, "source":"sql"}}'''
-    sql_command = f"""COMMENT ON TABLE {tname} IS '{comment_text}';"""
+    # sql_command = f"""COMMENT ON TABLE {tname} IS '{comment_text}';"""
+    sql_command = f"""ALTER ICEBERG TABLE {tname} SET COMMENT = '{comment_text}';"""
     session.sql(sql_command).collect()
 
 # SNOWFLAKE ADVANTAGE: Warehouse elasticity (dynamic scaling)
