@@ -26,7 +26,7 @@ def create_orders_table(session):
                            BASE_LOCATION = \'iceberg-tables/table\'
                        AS
                            SELECT * FROM HARMONIZED.POS_FLATTENED_V""").collect()
-    _ = session.sql("ALTER TABLE HARMONIZED.ORDERS ADD COLUMN META_UPDATED_AT TIMESTAMP").collect()
+    _ = session.sql("ALTER DYNAMIC TABLE HARMONIZED.ORDERS ADD COLUMN META_UPDATED_AT TIMESTAMP").collect()
 
 def create_orders_stream(session):
     _ = session.sql("CREATE STREAM HARMONIZED.ORDERS_STREAM ON TABLE HARMONIZED.ORDERS").collect()
