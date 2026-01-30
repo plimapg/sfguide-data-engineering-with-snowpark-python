@@ -19,8 +19,6 @@ def table_exists(session, schema='', name=''):
 
 def create_orders_table(session):
     _ = session.sql("""CREATE OR REPLACE ICEBERG TABLE HARMONIZED.ORDERS
-                           LAG = \'1 minute\'
-                           WAREHOUSE = \'HOL_WH\'
                            EXTERNAL_VOLUME = \'my_ext_vol\'
                            CATALOG = \'SNOWFLAKE\'
                            BASE_LOCATION = \'iceberg-tables/table\'
