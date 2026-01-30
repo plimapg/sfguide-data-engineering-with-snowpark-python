@@ -18,7 +18,14 @@ def table_exists(session, schema='', name=''):
     return exists
 
 def create_orders_table(session):
-    _ = session.sql("CREATE OR REPLACE DYNAMIC ICEBERG TABLE HARMONIZED.ORDERS LAG = \'1 minute\' WAREHOUSE = \'TB_DE_WH\' EXTERNAL_VOLUME = \'my_ext_vol\' CATALOG = \'SNOWFLAKE\' BASE_LOCATION = \'iceberg-tables/table\' AS SELECT * HARMONIZED.POS_FLATTENED_V").collect()
+    _ = session.sql("""CREATE OR REPLACE DYNAMIC ICEBERG TABLE HARMONIZED.ORDERS
+                           LAG = \'1 minute\'
+                           WAREHOUSE = \'TB_DE_WH\'
+                           EXTERNAL_VOLUME = \'my_ext_vol\'
+                           CATALOG = \'SNOWFLAKE\'
+                           BASE_LOCATION = \'iceberg-tables/table\'
+                       AS
+                           SELECT * FROM HARMONIZED.POS_FLATTENED_V""").collect()
     _ = session.sql("ALTER TABLE HARMONIZED.ORDERS ADD COLUMN META_UPDATED_AT TIMESTAMP").collect()
 
 def create_orders_stream(session):
