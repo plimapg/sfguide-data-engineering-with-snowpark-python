@@ -18,7 +18,7 @@ def table_exists(session, schema='', name=''):
     return exists
 
 def create_orders_table(session):
-    _ = session.sql("""CREATE OR REPLACE DYNAMIC ICEBERG TABLE HARMONIZED.ORDERS
+    _ = session.sql("""CREATE OR REPLACE ICEBERG TABLE HARMONIZED.ORDERS
                            LAG = \'1 minute\'
                            WAREHOUSE = \'HOL_WH\'
                            EXTERNAL_VOLUME = \'my_ext_vol\'

@@ -29,9 +29,15 @@ def create_daily_city_metrics_table(session):
     DAILY_CITY_METRICS_COLUMNS = [*SHARED_COLUMNS, T.StructField("META_UPDATED_AT", T.TimestampType())]
     DAILY_CITY_METRICS_SCHEMA = T.StructType(DAILY_CITY_METRICS_COLUMNS)
 
+    iceberg_config = {
+        "external_volume": "my_ext_vol",
+        "catalog": "SNOWFLAKE",
+        "base_location": "iceberg-tables/table",
+    }
+
     dcm = session.create_dataframe([[None]*len(DAILY_CITY_METRICS_SCHEMA.names)], schema=DAILY_CITY_METRICS_SCHEMA) \
                         .na.drop() \
-                        .write.mode('overwrite').save_as_table('ANALYTICS.DAILY_CITY_METRICS')
+                        .write.mode('overwrite').save_as_table('ANALYTICS.DAILY_CITY_METRICS', iceberg_config=iceberg_config)
     dcm = session.table('ANALYTICS.DAILY_CITY_METRICS')
 
 
